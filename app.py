@@ -25,7 +25,8 @@ mp_holistic = mp.solutions.holistic
 
 # Load model
 ABSOLUTE_PATH = os.path.dirname(os.path.abspath(__file__)) + '/'
-model = load_model(ABSOLUTE_PATH + 'gru_2layer_seed0.keras')
+# model = load_model(ABSOLUTE_PATH + 'gru_2layer_seed0.keras')
+model = load_model(ABSOLUTE_PATH + 'lstm_2layer_seed0.keras')
 
 # Global variables
 START = time.time()
