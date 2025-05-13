@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Language Recognition</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sign Language Recognition</h1>
+        </header>
+        
+        <main>
+            <div class="video-container">
+                <img id="videoFeed" src="{{ url_for('video_feed') }}" alt="Video Feed" style="display: none;">
+                <div id="placeholderContainer">
+                    <div class="placeholder">
+                        <div class="camera-icon">📷</div>
+                        <p>Camera feed will appear here</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button id="startButton" class="btn">Start Camera</button>
+                <button id="stopButton" class="btn" disabled>Stop Camera</button>
+            </div>
+            
+            <div class="results">
+                <div class="result-item">
+                    <h3>Prediction:</h3>
+                    <div id="predictionResult" class="result-value">-</div>
+                </div>
+                <div class="result-item">
+                    <h3>Confidence:</h3>
+                    <div id="confidenceResult" class="result-value">-</div>
+                </div>
+            </div>
+            
+            <div class="word-list">
+                <h2>Available Signs</h2>
+                <div class="words-container">
+                    <div class="word">Hello</div>
+                    <div class="word">Thank you</div>
+                    <div class="word">Sorry</div>
+                    <div class="word">Yes</div>
+                    <div class="word">No</div>
+                    <div class="word">No problem</div>
+                    <div class="word">Fun</div>
+                    <div class="word">You</div>
+                    <div class="word">I</div>
+                    <div class="word">Sports</div>
+                    <div class="word">Tuesday</div>
+                    <div class="word">Fine</div>
+                    <div class="word">Sick</div>
+                    <div class="word">Study</div>
+                    <div class="word">Sign language</div>
+                    <div class="word">What</div>
+                    <div class="word">Like</div>
+                    <div class="word">How much</div>
+                    <div class="word">Football</div>
+                    <div class="word">Fruits</div>
+                    <div class="word">Watermelon</div>
+                    <div class="word">Eat</div>
+                    <div class="word">Hungry</div>
+                    <div class="word">Sick/Cold</div>
+                    <div class="word">Noodles</div>
+                    <div class="word">Tomorrow</div>
+                    <div class="word">Headache</div>
+                    <div class="word">Age</div>
+                    <div class="word">30</div>
+                    <div class="word">Name</div>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Sign Language Recognition Web App</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
