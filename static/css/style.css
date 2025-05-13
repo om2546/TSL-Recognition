@@ -47,8 +47,8 @@ header h1:after {
 /* Video Container */
 .video-container {
     position: relative;
-    width: 480px; /* Set fixed width */
-    height: 480px; /* Same height as width for square aspect */
+    width: 640px; /* Match webcam width */
+    height: 480px; /* Match webcam height */
     margin: 0 auto 20px; /* Center the container horizontally */
     background-color: #000;
     border-radius: 8px;
@@ -201,8 +201,8 @@ footer {
 /* Responsive Design */
 @media (max-width: 768px) {
     .video-container {
-        width: 350px;
-        height: 350px;
+        width: 480px;
+        height: 360px;
     }
     
     .results {
@@ -225,8 +225,8 @@ footer {
     }
     
     .video-container {
-        width: 280px;
-        height: 280px;
+        width: 320px;
+        height: 240px;
     }
     
     .controls {

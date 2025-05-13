@@ -144,13 +144,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Add click handlers to word elements
-    wordElements.forEach(element => {
-        element.addEventListener('click', function() {
-            // Display how to sign this word (this could be extended to show instructions or videos)
-            const word = this.textContent.trim();
-            showTip(`Try signing "${word}"`);
-        });
-    });
+    // wordElements.forEach(element => {
+    //     element.addEventListener('click', function() {
+    //         // Display how to sign this word (this could be extended to show instructions or videos)
+    //         const word = this.textContent.trim();
+    //         showTip(`Try signing "${word}"`);
+    //     });
+    // });
     
     function showTip(message) {
         // Create tip notification
