@@ -3,3 +3,4 @@
 tensorflow==2.14.0
 keras==2.14.0
 opencv-python
+flask
