@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     placeholderContainer.style.display = 'none';
                     startButton.disabled = true;
                     stopButton.disabled = false;
+                    videoFeed.src = "/video_feed";
                     
                     // Start polling for predictions
                     startPredictionPolling();
@@ -48,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     placeholderContainer.style.display = 'block';
                     startButton.disabled = false;
                     stopButton.disabled = true;
+                    videoFeed.src = "static/image/cam.png";
                     
                     // Stop polling for predictions
                     stopPredictionPolling();
@@ -99,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
         confidenceResult.textContent = probability ? `${probability}` : '-';
         
         // Highlight the corresponding word
-        // highlightWord(prediction);
+        highlightWord(prediction);
     }
     
     function highlightWord(word) {
@@ -113,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     element.classList.add('highlighted');
                     
                     // Scroll to the highlighted word if it's not in view
-                    element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    // element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }
             });
         }
@@ -172,6 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Handle video feed errors
     videoFeed.addEventListener('error', function() {
+        console.error('Video feed error:', this.error);
         showError('Video feed error. Please check your camera permissions and refresh the page.');
     });
 });
