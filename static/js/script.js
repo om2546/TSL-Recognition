@@ -113,9 +113,6 @@ document.addEventListener('DOMContentLoaded', function() {
             wordElements.forEach(element => {
                 if (element.textContent.trim() === word.trim()) {
                     element.classList.add('highlighted');
-                    
-                    // Scroll to the highlighted word if it's not in view
-                    // element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }
             });
         }
@@ -146,31 +143,179 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Add click handlers to word elements
-    // wordElements.forEach(element => {
-    //     element.addEventListener('click', function() {
-    //         // Display how to sign this word (this could be extended to show instructions or videos)
-    //         const word = this.textContent.trim();
-    //         showTip(`Try signing "${word}"`);
-    //     });
-    // });
-    
-    function showTip(message) {
-        // Create tip notification
-        const tipDiv = document.createElement('div');
-        tipDiv.className = 'tip-notification';
-        tipDiv.textContent = message;
+    wordElements.forEach(element => {
+        element.addEventListener('click', function() {
+            // Display how to sign this word (this could be extended to show instructions or videos)
+            const word = this.textContent.trim();
+            showPopup(word);
+        });
+    });
+    function showPopup(word) {
+        // Check if there's already a popup open
+        const existingPopup = document.querySelector('.video-popup');
+        if (existingPopup) {
+            existingPopup.remove();
+        }
         
-        // Add to DOM
-        document.body.appendChild(tipDiv);
+        // Format the word for the file path (lowercase, replace spaces with underscores)
+        const formattedWord = word.toLowerCase().replace(/ /g, '_');
         
-        // Remove after 3 seconds
-        setTimeout(() => {
-            tipDiv.classList.add('fade-out');
+        // Ensure we're using the correct path based on Flask's URL structure
+        // This uses the static folder configured in Flask
+        const videoPath = `/static/video/${formattedWord}.mp4`;
+        
+        // Create popup container
+        const popup = document.createElement('div');
+        popup.className = 'video-popup';
+        
+        // Create popup content
+        const popupContent = document.createElement('div');
+        popupContent.className = 'popup-content';
+        
+        // Create title
+        const title = document.createElement('h3');
+        title.textContent = `How to sign: "${word}"`;
+        
+        // Create video element
+        const video = document.createElement('video');
+        video.controls = true;
+        video.muted = false;
+        video.playsInline = true;
+        video.width = 480;  // Set explicit dimensions
+        video.height = 360;
+        video.className = 'sign-video';
+        
+        // Create source - placing the source element correctly
+        const source = document.createElement('source');
+        source.src = videoPath;
+        source.type = 'video/mp4';
+        video.appendChild(source);
+        
+        // Create play button for mobile/browser autoplay policy
+        const playButton = document.createElement('button');
+        playButton.className = 'play-button';
+        playButton.textContent = 'Play Video';
+        playButton.style.display = 'none'; // Hide initially, show only if needed
+        
+        // Create loading indicator
+        const loadingIndicator = document.createElement('div');
+        loadingIndicator.className = 'loading-indicator';
+        loadingIndicator.innerHTML = 'Loading video...';
+
+        // Create close button
+        const closeButton = document.createElement('button');
+        closeButton.className = 'close-button';
+        closeButton.innerHTML = '&times;';
+        closeButton.title = 'Close';
+        
+        // Add event handlers for video
+        video.addEventListener('loadstart', function() {
+            loadingIndicator.style.display = 'block';
+        });
+        
+        video.addEventListener('canplay', function() {
+            loadingIndicator.style.display = 'none';
+            // Try to play automatically
+            video.play()
+                .catch(error => {
+                    console.warn('Autoplay prevented:', error);
+                    playButton.style.display = 'block';
+                });
+        });
+        
+        video.addEventListener('error', function(e) {
+            console.error('Video error:', e);
+            console.error('Error code:', video.error ? video.error.code : 'unknown');
+            console.error('Error message:', video.error ? video.error.message : 'unknown');
+            
+            loadingIndicator.style.display = 'none';
+            
+            const errorMessage = document.createElement('div');
+            errorMessage.className = 'video-error';
+            errorMessage.innerHTML = `
+                <p>Sorry, the video for "${word}" could not be loaded.</p>
+                <p>Error: ${video.error ? video.error.message : 'Unknown error'}</p>
+                <p>Please check if the video file exists at: ${videoPath}</p>
+            `;
+            
+            // Replace video with error message
+            if (video.parentNode) {
+                video.parentNode.replaceChild(errorMessage, video);
+                // Also remove the play button if visible
+                if (playButton.parentNode) {
+                    playButton.parentNode.removeChild(playButton);
+                }
+            }
+        });
+        
+        // Handle play button click
+        playButton.addEventListener('click', function() {
+            video.play()
+                .then(() => {
+                    playButton.style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Play failed:', error);
+                });
+        });
+        
+        // Assemble elements
+        popupContent.appendChild(closeButton);
+        popupContent.appendChild(title);
+        popupContent.appendChild(loadingIndicator);
+        popupContent.appendChild(video);
+        popupContent.appendChild(playButton);
+        
+        popup.appendChild(popupContent);
+        document.body.appendChild(popup);
+        
+        // Add close functionality
+        closeButton.addEventListener('click', function() {
+            // Pause video when closing
+            video.pause();
+            popup.classList.add('fade-out');
             setTimeout(() => {
-                document.body.removeChild(tipDiv);
-            }, 500);
-        }, 3000);
+                popup.remove();
+            }, 300);
+        });
+        
+        // Close when clicking outside the popup content
+        popup.addEventListener('click', function(e) {
+            if (e.target === popup) {
+                // Pause video when closing
+                video.pause();
+                popup.classList.add('fade-out');
+                setTimeout(() => {
+                    popup.remove();
+                }, 300);
+            }
+        });
+        
+        // Close on escape key
+        const escHandler = function(e) {
+            if (e.key === 'Escape') {
+                const openPopup = document.querySelector('.video-popup');
+                if (openPopup) {
+                    // Pause video when closing
+                    if (video) video.pause();
+                    openPopup.classList.add('fade-out');
+                    setTimeout(() => {
+                        openPopup.remove();
+                        // Clean up the event listener
+                        document.removeEventListener('keydown', escHandler);
+                    }, 300);
+                }
+            }
+        };
+        
+        document.addEventListener('keydown', escHandler);
+        
+        // Add animation class after a small delay to trigger CSS transition
+        setTimeout(() => {
+            popup.classList.add('active');
+        }, 10);
     }
+    
     
     // Handle video feed errors
     videoFeed.addEventListener('error', function() {
