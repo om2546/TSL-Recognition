@@ -157,8 +157,8 @@ document.addEventListener('DOMContentLoaded', function() {
             existingPopup.remove();
         }
         
-        // Format the word for the file path (lowercase, replace spaces with underscores)
-        const formattedWord = word.toLowerCase().replace(/ /g, '_');
+        // Format the word for the file path (lowercase, replace spaces and slashes with underscores)
+        const formattedWord = word.toLowerCase().replace(/[ /]/g, '_');
         
         // Ensure we're using the correct path based on Flask's URL structure
         // This uses the static folder configured in Flask
