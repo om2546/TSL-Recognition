@@ -101,7 +101,9 @@ document.addEventListener('DOMContentLoaded', function() {
         confidenceResult.textContent = probability ? `${probability}` : '-';
         
         // Highlight the corresponding word
-        highlightWord(prediction);
+        if (probability > 0.7) {
+            highlightWord(prediction);
+        }
     }
     
     function highlightWord(word) {
